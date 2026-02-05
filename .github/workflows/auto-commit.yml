@@ -2,7 +2,7 @@ name: Daily Auto Commit
 
 on:
   schedule:
-    - cron: "0 4 * * *"
+    - cron: "0 0 * * *"  # Run at midnight UTC daily
   workflow_dispatch:
 
 permissions:
@@ -25,5 +25,9 @@ jobs:
           git config user.name "Semmozhidouble"
           git config user.email "semmozhi12122005@gmail.com"
           git add log.txt
-          git commit -m "🤖 Daily auto commit $(date)" || echo "No changes to commit"
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "🤖 Daily auto commit $(date)"
           git push
